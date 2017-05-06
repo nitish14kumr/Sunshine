@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">Sunshine</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action">Settings</string>
+    <string name="refresh">Refresh</string>
+    <string name="exit">Exit</string>
+</resources>
