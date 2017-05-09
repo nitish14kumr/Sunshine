@@ -14,9 +14,10 @@ import android.widget.TextView;
 
 import java.util.zip.Inflater;
 
+import static android.R.attr.dashGap;
 import static android.R.attr.fragment;
 
-public class DetailActivity extends AppCompatActivity{
+public class DetailActivity extends AppCompatActivity {
 
     final static String TAG = "com.example.android";
 
@@ -24,16 +25,15 @@ public class DetailActivity extends AppCompatActivity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
-
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction().add(R.id.container,
-                    new ForecastFragment()).commit();
-        }
-
-//        PlaceHolderFragment placeHolderFragment = new PlaceHolderFragment();
-//        placeHolderFragment.onCreateView();
-
-//        Bundle Data = getIntent().getExtras();
+//
+//        if (savedInstanceState == null) {
+//            getSupportFragmentManager().beginTransaction().add(R.id.container,
+//                    new PlaceHolderFragment()).commit();
+//        }
+        Bundle Data = getIntent().getExtras();
+        String forecast = Data.getString("detail");
+        PlaceHolderFragment placeHolderFragment = PlaceHolderFragment.newInstance(forecast);
+        getSupportFragmentManager().beginTransaction().add(R.id.fragment_container, placeHolderFragment).commit();
 //
 //        String forecastStr = Data.getString("detail");
 //        Log.i(TAG,"forecast: "+forecastStr);
@@ -42,20 +42,37 @@ public class DetailActivity extends AppCompatActivity{
 
     }
 
-    public static class PlaceHolderFragment extends Fragment{
-        public PlaceHolderFragment(){
+    public static class PlaceHolderFragment extends Fragment {
+        private static final String PARAM = "PARAM";
+
+        public PlaceHolderFragment() {
+        }
+
+        public static PlaceHolderFragment newInstance(String forecast) {
+            PlaceHolderFragment placeHolderFragment = new PlaceHolderFragment();
+            Bundle bundle = new Bundle();
+            bundle.putString(PARAM, forecast);
+            placeHolderFragment.setArguments(bundle);
+            return placeHolderFragment;
         }
 
         @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle save){
-            Intent intent = getActivity().getIntent();
-            View rootView = inflater.inflate(R.layout.fragment_detail, container,false);
-            if(intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
-                String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                Log.i(TAG,"forecast: "+forecastStr);
-                TextView detailText = (TextView) rootView.findViewById(R.id.detailText);
-                detailText.setText(forecastStr);
+        public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle save) {
+//            Intent intent = getActivity().getIntent();
+            View rootView = inflater.inflate(R.layout.fragment_detail, container, false);
+            TextView detailText = (TextView) rootView.findViewById(R.id.detailText);
+            String forecastStr = "null";
+//            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)) {
+//                String forecastStr = intent.getStringExtra(Intent.EXTRA_TEXT);
+//                Log.i(TAG, "forecast: " + forecastStr);
+//                TextView detailText = (TextView) rootView.findViewById(R.id.detailText);
+//                detailText.setText(forecastStr);
+//            }
+            if (getArguments() != null) {
+                forecastStr = getArguments().getString(PARAM); // getArguments used to get string back
+                Log.e(TAG, "onCreateView: " + detailText.getText() + "  " + forecastStr);
             }
+            detailText.setText(forecastStr);
             return rootView;
         }
     }
